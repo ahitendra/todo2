@@ -1,0 +1,38 @@
+<div class="row profile">
+    <div class="col-sm-4 col-md-3 pull-left">
+        <%= image_tag(@user.avatar.url(:medium), class: 'avatar') %>
+        <h4><%= @user.full_name %></h4>
+        <ul>
+            <%= content_tag(:li, ("Name: " + @user.name)) unless @user.name.blank? %>
+            <%= content_tag(:li, ("Age: " + distance_of_time_in_words(Time.now, @user.date_of_birth) + " old")) unless @user.date_of_birth.blank? %>
+        </ul>
+    </div>
+   <!--  <div class="feed">
+        <h3>Social Feed Coming</h3>
+        <p>Put a couple of lines of text here and see how it scrolls</p>
+    </div> -->
+</div>
+
+<div class="row">
+	<div class="well col-md-12 pull-left">
+      <% if current_user == @user %>
+        <h4> All your todos here </h4>
+      <% else %>
+        <h4>All his/her todos here</h4>
+      <% end %>
+            <ul >
+            <% @todos=Todo.all %>
+              <% @todos.each do |todo| %> 
+                <% if todo.user==@user%>
+                  <% if todo.completed == true %>
+                    <li><strong><strike><%= link_to todo.todo_item, todo_path(todo) %></strike></strong> </li>
+                  <% else %>
+                    <li> <strong><%= link_to todo.todo_item, todo_path(todo) %></strong>  </li>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </ul>
+      </div> <!-- well -->
+
+
+</div>

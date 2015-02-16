@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="row">
+    <div class="span4">
+      <h1>Todo App</h1>
+      <hr>
+      <p>Your selected Todo</p>
+      <div class="well">
+        <p>
+          <strong>Todo:</strong>
+          <% if @todo.completed == true %>
+            <strike><%= @todo.todo_item %></strike>
+          <%else%>
+            <%= @todo.todo_item %>
+          <% end %>  
+        </p>
+        <% if @todo.user==current_user %>
+          <p>
+            <%= link_to 'Edit', edit_todo_path(@todo) %>
+            &nbsp;
+            <%= link_to 'Dlelete', todo_path(@todo), method: :delete, data: { Confirm: 'Are you sure?' } %>
+            &nbsp;
+            <%= link_to 'Complete/InCompleteTodo', action: 'incomplete', id: @todo.id %>
+          </p>
+        <% end %>  
+               
+        <h4>Comments</h4>
+        <% @comments=Comment.all %>
+        <% @comments.each do |comment| %>
+          <% if comment.todo_id==@todo.id %>
+            <p>
+              <strong>Commenter:</strong>
+              <% if current_user.id == comment.user.id %>
+                <%= link_to "#{comment.Commenter} (me)", user_path(comment.user_id) %>
+              <% else %>
+                <%= link_to comment.Commenter, user_path(comment.user_id) %>
+              <% end %>
+
+              
+            </p>
+           
+            <p>
+              <strong>Comment:</strong>
+              <%= comment.body %>
+              
+            </p>
+            <p>
+            <% if @todo.user==current_user %>
+                <%= link_to 'DeleteComment', [comment.todo, comment], method: :delete, data: { Confirm: 'Are you sure?' }  %>
+              <% end %>
+              </p>
+            <hr>
+          <% end %>
+        <% end %>
+
+      </div> <!-- well -->
+    </div> <!-- span4 -->
+  </div> <!-- row -->
+</div> <!-- container -->
+
+<strong><p>&nbsp;&nbsp;&nbsp;Add a comment:</p></strong>
+        <%= form_for :comment , url: "/todos/#{@todo.id}/comments" do |f| %>
+
+            <%= f.text_area :body %>
+
+          <p>
+            <%= f.submit 'Add Comment'%>
+          </p>
+        <% end %>

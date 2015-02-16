@@ -1,0 +1,72 @@
+
+<div class="container">
+  <div class="row">
+    <div class="span4">
+      <h1>Todo App</h1>
+      <hr>
+      <%= form_for :todo , url: todos_path do |f| %>
+        <p>
+          <%= f.label :todo_item %><br>
+          <%= f.text_field :todo_item %>
+        </p>
+
+        <div class="container">
+          <div class="row">
+            <div class='col-sm-6'>
+              <div class="form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+              </div>
+            </div>
+            <script type="text/javascript">
+                $(function () {
+                  $('#datetimepicker1').datetimepicker();
+                });
+            </script>
+          </div>
+        </div>
+
+
+        <p>
+          <%= f.submit "Add todo" %>
+        </p>
+      <% end %>
+
+      <% if !flash[:error].nil? %>
+        <div class="alert alert-danger">
+          <button type="button" class="close" data-dismiss="alert" >×</button>
+          <li><strong><%= flash[:error] %></strong></li>
+        </div>
+      <% end %>
+
+      <% if flash[:success] %>
+        <div class="alert alert-success">
+          <button type="button" class="close" data-dismiss="alert" >×</button>
+          <li><strong><%= flash[:success] %></strong></li>
+        </div>
+      <% end %>
+
+      <br>
+      <h4>All your todos here</h4>
+      <div class="well">
+          <%= form_for :todo, url: { action: "complete" } do |f| %>
+            <ul style="list-style-type:none;">
+              <% @todos.each do |todo| %> 
+                <% if todo.user==current_user %>
+                  <% if todo.completed == true %>
+                    <li style="color:grey;"> <%= check_box_tag  "todos_checkbox[]",todo.id %>  <strong><strike><%= link_to todo.todo_item, todo_path(todo) %></strike></strong> </li>
+                  <% else %>
+                    <li> <%= check_box_tag  "todos_checkbox[]",todo.id %> <strong><%= link_to todo.todo_item, todo_path(todo) %></strong>  </li>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </ul>
+            <%= f.submit "Complete Todos" %>
+          <%end%>
+      </div> <!-- well -->
+    </div> <!-- span4 -->
+  </div> <!-- row -->
+</div> <!-- container -->
